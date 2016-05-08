@@ -1,0 +1,37 @@
+﻿{% extends "base.html" %}    
+{% block content %}
+<div class="row">
+    <div class="col-sm-5 col-sm col-md-offset-1">
+        <form method="post" action=""  enctype="multipart/form-data">{% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.name.auto_id }}">Nazev shapefilu</label>
+            <input type="text" class="form-control" name="name" id="{{ form.name.auto_id }}" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.layerName.auto_id }}">Typ shapefilu</label><br>
+            <select class="form-control" name="layerName" id="{{ form.layerName.auto_id }}">  
+                {% for id, name in form.layerName.field.choices %}
+                    <option value="{{ id }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.fileshp.auto_id }}">vloz vsechny potrebne soubory</label>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Nacti... 
+                        <input type="file" class="form-control" multiple="" id="{{ form.fileshp.auto_id }}" name="files"/>
+                    </span>
+                </span>
+                <input class="form-control" type="text" readonly=""/>
+            </div>
+        </div>
+        <input class="btn btn-default" type="submit" value="uloz shapefile"/>
+    </form>
+    </div>
+</div>
+{% endblock content %}
+
+
+

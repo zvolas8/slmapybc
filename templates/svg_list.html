@@ -1,0 +1,26 @@
+﻿{% extends "base.html" %}   
+{% block content %}
+{% load static %}
+{% static "" as baseUrl %}
+        <div class="row">
+            {% for obj in object_list %}
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <div>
+                            <h3>{{ obj.name }}</h3>
+                        </div>
+                        <div>
+                            <a class="btn btn-success" href="{{ obj.get_absolute_url }}" role="button">Detail</a>   
+                            <a class="btn btn-danger" href="{{ obj.get_absolute_url }}delete" role="button">Smazat</a>   
+                        </div>
+                    </div>
+                    <img src="{{ baseUrl }}{{ obj.pathToFileSvg }}" alt="{{ obj.name }}" class="thumbnail"`/>
+                </div>
+            </div>
+            {% endfor %}
+        </div>    
+
+
+        
+{% endblock content %}
