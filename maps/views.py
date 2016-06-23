@@ -21,6 +21,7 @@ from lxml import etree
 
 from .forms import ShapefileForm, SvgForm
 from .models import Shapefile, SvgFile
+from django.conf import settings
 
 
 
@@ -45,8 +46,8 @@ def maps_create(request):
 
         for f in request.FILES.getlist('files'):
             if f.name[-3:] != "shp":
-                path = default_storage.save((str(instance.id) + "\\" + f.name), ContentFile(f.read()))
-        
+                path = default_storage.save(os.path.join(settings.MEDIA_ROOT, str(instance.id), f.name), ContentFile(f.read()))
+
         projectName = 'slepemapy'
         resName = 'czwords'
 
@@ -57,13 +58,13 @@ def maps_create(request):
             print pr
             re = transifexCreateNewResource(resName, projectName)
             print re
-        
+
         config = create_config(instance.id, tempfile.name, layerName)
         pathPO = save_svg(config, shpName)
         addWordToPOFile(pathPO)
         transifexUpdateResource(resName, projectName)
 
-        deleteFolder = "C:\\Users\marek\Documents\pythonprojekt\slepeMapy\media_cdn\\None" #najit slozku automaticky TODO
+        deleteFolder = os.path.join(settings.MEDIA_ROOT, "None")  # najit slozku automaticky TODO
         shutil.rmtree(deleteFolder)
 
         messages.success(request, "shapefile byl ulozen")
@@ -82,7 +83,7 @@ def save_svg(config, name):
     svg.config = tConfig
     svg.save()
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    path = "img\\" + str(svg.id) + "\\" + tName + ".svg"
+    path = os.path.join("img", str(svg.id), tName + ".svg")
     svg.pathToFileSvg = path
     svg.save()
     create_svg_file(config, name, svg.id)
@@ -97,10 +98,10 @@ def create_config(id, FILE_NAME, layerName):
     config = {
             "layers": [{
                 "id": str(layerName),
-                "src": str("C:\\Users\marek\Documents\pythonprojekt\slepeMapy\media_cdn\\" + str(id) + "\\" + FILE_NAME),
+                "src": os.path.join(settings.MEDIA_ROOT, str(id), FILE_NAME),
                 "attributes": {
                     "id": "iso_a2",
-                    "code": "name",  
+                    "code": "name",
                     "name": "name"
                 }
             }]
@@ -109,7 +110,7 @@ def create_config(id, FILE_NAME, layerName):
 
 def create_svg_file(config, svgName, id):
     K = Kartograph()
-    directory = 'static\img\\' + str(id)
+    directory = os.path.join('static', 'img', str(id))
     if not os.path.exists(directory):
        os.makedirs(directory)
     tempName = os.path.splitext(svgName)[0]
@@ -191,16 +192,16 @@ def update_svg(request, id=None):
 
     context = {
         "instance": instance,
-        "form": form     
+        "form": form
         }
     return render(request, "svg_form.html", context)
 
 def addWordToPOFile(filePath):
-    with open("static\\" + filePath, 'r') as infile: 
+    with open(os.path.join("static", filePath), 'r') as infile:
         svg = etree.parse( infile )
 
     pofile = polib.pofile('translation/pofiles.po', check_for_duplicates = True)
-    
+
     SVG_NS = "{http://www.w3.org/2000/svg}"
 
     for element in svg.iter(SVG_NS + 'path'):
@@ -295,12 +296,12 @@ def transifexUpdateResource(resName, projectName):
             url, data=json.dumps(data), auth=transifexLogin(), headers=headers,
     )
     return response.status_code
-    
+
 
 def translation_word(reques, id=None):
     instance = get_object_or_404(SvgFile, id=id)
-    svg = etree.parse(open("static\\img\\38\\hory.svg", 'r'))
-    
+    svg = etree.parse(open(os.path.join("static", "img", "38", "hory.svg"), 'r'))
+
     SVG_NS = "http://www.w3.org/2000/svg"
 
     for node in svg.findall('.//{%s}path' % SVG_NS):
