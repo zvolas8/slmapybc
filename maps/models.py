@@ -6,34 +6,46 @@ from django.core.urlresolvers import reverse
 def uploadLocation(instance, filename):
     return "%s/%s" %(instance.id, filename)
 
+class Layers(models.Model):
+    idLayer = models.CharField(max_length=120, blank=False, null=False)
+    name  = models.CharField(max_length=120, blank=False, null=False)
+
+    def __unicode__(self):
+        return self.name
+
+    def __str__(self):
+        return self.name
+
 class Shapefile(models.Model):
 
-    LAYER_CHOICES = (
-        ('state', 'Staty'),
-        ('state-by-city', 'Staty skrze hlavni mesta'),
-        ('region', 'Regiony'),
-        ('province', 'Provincie'),
-        ('region_cz', 'Kraje'),
-        ('region_it', 'Oblasti'),
-        ('autonomous_Comunity', 'Autonomni spolecenstvi'),
-        ('bundesland', 'Spolkove zeme'),
-        ('city', 'Mesta'),
-        ('city-by-state', 'Hlavni mesta skrze staty'),
-        ('river', 'Reky'),
-        ('reservoir', 'Vodni nadrze'),
-        ('lake', 'Jezera'),
-        ('sea', 'More'),
-        ('mountains', 'Pohori'),
-        ('surface', 'Povrch'),
-        ('island', 'Ostrovy'),
-    )
+    #LAYER_CHOICES = (
+    #    ('border', 'hranice'),
+    #    ('state', 'Staty'),
+    #    ('state-by-city', 'Staty skrze hlavni mesta'),
+    #    ('region', 'Regiony'),
+    #    ('province', 'Provincie'),
+    #    ('region_cz', 'Kraje'),
+    #    ('region_it', 'Oblasti'),
+    #    ('autonomous_Comunity', 'Autonomni spolecenstvi'),
+    #    ('bundesland', 'Spolkove zeme'),
+    #    ('city', 'Mesta'),
+    #    ('city-by-state', 'Hlavni mesta skrze staty'),
+    #    ('river', 'Reky'),
+    #    ('reservoir', 'Vodni nadrze'),
+    #    ('lake', 'Jezera'),
+    #    ('sea', 'More'),
+    #    ('mountains', 'Pohori'),
+    #    ('surface', 'Povrch'),
+    #    ('island', 'Ostrovy'),
+    #)
 
     name = models.CharField(max_length=120, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     shapefileName = models.CharField(max_length=120, blank=True, null=True)
     fileshp = models.FileField(upload_to=uploadLocation, null=True, blank=True)
     #layerName = models.CharField(max_length=120, blank=True, null=True)
-    layerName =  models.CharField(max_length=120, choices=LAYER_CHOICES)
+    #layerName =  models.CharField(max_length=120, choices=LAYER_CHOICES, null=True)
+    layerName = models.ForeignKey(Layers)
 
     def __unicode__(self):
         return self.name
@@ -50,6 +62,7 @@ class SvgFile(models.Model):
     config = models.TextField()
     filesvg = models.FileField(upload_to=uploadLocation, null=True, blank=True)
     pathToFileSvg = models.CharField(max_length=1024, blank=True, null=True)
+    isOld = models.BooleanField(default=True);
 
     def __unicode__(self):
         return self.name

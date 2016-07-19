@@ -75,16 +75,28 @@
     <Content Include="static\css\bootstrap.css" />
     <Content Include="static\js\bootstrap.js" />
     <Content Include="static\js\collapsePanel.js" />
+    <Content Include="static\js\configPrint.js" />
     <Content Include="static\js\fileField.js" />
     <Content Include="static\js\jquery-2.2.2.js" />
+    <Content Include="static\js\kartograph.min.js" />
+    <Content Include="static\js\mapPrint.js" />
     <Content Include="static\js\npm.js" />
+    <Content Include="static\js\raphael.min.js" />
     <Content Include="templates\base.html" />
     <Content Include="templates\createsvg_list.html" />
+    <Content Include="templates\detail_base.html" />
     <Content Include="templates\message_display.html" />
+    <Content Include="templates\removeLayer.html" />
+    <Content Include="templates\settings_layer.html" />
+    <Content Include="templates\settings_layer_add.html" />
+    <Content Include="templates\settings_layer_edit.html" />
     <Content Include="templates\shapefile_form.html" />
     <Content Include="templates\shapefile_list.html" />
+    <Content Include="templates\svg_final_list.html" />
     <Content Include="templates\svg_form.html" />
     <Content Include="templates\svg_list.html" />
+    <Content Include="templates\svg_words.html" />
+    <Content Include="templates\settings_base.html" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

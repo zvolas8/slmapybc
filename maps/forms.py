@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Shapefile, SvgFile
+from .models import Shapefile, SvgFile, Layers
 
 
 class ShapefileForm(forms.ModelForm):
@@ -18,5 +18,13 @@ class SvgForm(forms.ModelForm):
         model = SvgFile
         fields = [
             "name",
-            "config",
+            #"config",
+            ]
+
+class LayersForm(forms.ModelForm):
+    class Meta:
+        model = Layers
+        fields = [
+            "idLayer",
+            "name",
             ]

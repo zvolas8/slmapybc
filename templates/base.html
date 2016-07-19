@@ -39,8 +39,14 @@
                   <li class="{% active request "createsvg" %}">
                     <a href="{% url "maps:createsvg" %}">Vytvor svg</a>
                  </li>
-                  <li class="{% active request "list" %}">
+                  <li class="{% active request "svglist" %}">
                     <a href="{% url "maps:svglist" %}">Prehled svg</a>
+                  </li>
+                  <li class="{% active request "svgfinallist" %}">
+                    <a href="{% url "maps:svgfinallist" %}">Konecne svg</a>
+                  </li>
+                  <li class="{% active request "mapssettings" %}">
+                    <a href="{% url "maps:mapssettings" %}">Nastaveni</a>
                   </li>
                 </ul>
               </div>
@@ -51,8 +57,12 @@
     </div>
 
     <script type="text/javascript" src="{% static "js/jquery-2.2.2.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/raphael.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/kartograph.min.js" %}"></script>
     <script type="text/javascript" src="{% static "js/bootstrap.js" %}"></script>
     <script type="text/javascript" src="{% static "js/fileField.js" %}"></script>
     <script type="text/javascript" src="{% static "js/collapsePanel.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/configPrint.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/mapPrint.js" %}"></script>
 </body>
 </html>

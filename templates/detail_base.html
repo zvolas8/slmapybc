@@ -1,0 +1,37 @@
+﻿{% extends "base.html" %}
+{% block content %}
+
+    <div class="row marginBottom15">
+        <div class="col-md-5 col-md-offset-3">
+            <h2 class="my-text-center margin-top-bottom-0">{{ instance.name }}</h2>
+        </div>
+        <div class="col-md-4">
+            {% if instance.isOld %}
+                <a class="btn btn-default pull-right" href="{% url "maps:svglist" %}" role="button">Zpet na vypis</a> 
+            {% else %}
+                <a class="btn btn-default pull-right" href="{% url "maps:svgfinallist" %}" role="button">Zpet na vypis</a>
+            {% endif %}
+            <a class="btn btn-danger pull-right marginRight5" href="{{ instance.get_absolute_url }}delete" role="button">Smazat</a>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-2">
+            <a class="btn btn-success btn-block" href="{{ instance.get_absolute_url}}" role="button">Mapa</a>
+            <a class="btn btn-success btn-block" href="{{ instance.get_absolute_url}}edit" role="button">Upravit</a>
+            <a class="btn btn-success btn-block" href="{{ instance.get_absolute_url}}translate" role="button">prelozit</a>
+            {% if instance.isOld %}
+                <a class="btn btn-success btn-block" href="{{ instance.get_absolute_url}}toFinal" role="button">Konecne SVG</a>
+            {% endif %}
+            
+        </div>
+        <div class="col-md-10">
+            {% block detail %}{% endblock detail %}
+        </div>
+    </div>
+<div id="mapPath" class="row hidden">
+/static/{{ instance.pathToFileSvg }}    
+</div>
+
+
+{% endblock content %}

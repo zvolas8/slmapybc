@@ -1,0 +1,22 @@
+﻿{% extends "base.html" %}
+    
+
+{% block content %}
+
+<table class="table">
+    <thead>
+      <tr>
+        <th>nazev</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for layer in layers %}
+      <tr>
+        <td>{{ layer }}</td>
+        <td> <a class="btn btn-success btn-block" href="{% url "maps:deletelayer" id=id layer=layer %}" role="button">smaz</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock content %}

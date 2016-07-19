@@ -1,0 +1,26 @@
+﻿{% extends "detail_base.html" %}
+{% block detail %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table">
+    <thead>
+      <tr>
+        <th>CS</th>
+        <th>EN</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for word in words %}
+      <tr>
+        <td>{{ word }}</td>
+        <td>-</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    </div>
+</div>
+
+
+{% endblock detail %}

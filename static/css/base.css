@@ -40,3 +40,68 @@ input[readonly] {
     padding-top: 7.5px;
 }
 
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
+
+.nextAttButton {
+    margin-top: 5px;
+}
+
+.marginBottom5 {
+    margin-bottom: 5px;
+}
+
+.marginBottom15 {
+    margin-bottom: 15px;
+}
+
+.marginRight5 {
+    margin-right: 5px;
+}
+
+.margin-left-right-0 {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.margin-top-bottom-0 {
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.attTitle {
+    margin-left: 14px;
+}
+
+.detailLeftPanel {
+    border-right: solid 1px;
+}
+
+.my-text-center {
+    text-align: center;
+}
+
+.svg-final-image {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.svg-final-detail {
+    padding-right: 2px;
+}
+
+.svg-final-delete {
+    padding-left: 2px;
+}
+
+.svg-final-title {
+    margin-top: 10px;
+}
+
+.map-info-name {
+    margin-left: 3px;
+}

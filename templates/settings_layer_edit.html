@@ -1,0 +1,20 @@
+﻿{% extends "settings_base.html" %}    
+{% block settingMap %}
+    <form class="form-horizontal" method="post" action=""  enctype="multipart/form-data">{% csrf_token %}
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="{{ form.idLayer.auto_id }}">ID vrstvy</label>
+            <div class="col-sm-5">
+               <input type="text" class="form-control" name="idLayer" id="{{ form.idLayer.auto_id }}" placeholder="" value="{{ form.idLayer.value }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="{{ form.name.auto_id }}">Nazev vrstvy</label>
+            <div class="col-sm-5">
+               <input type="text" class="form-control" name="name" id="{{ form.name.auto_id }}" placeholder="" value="{{ form.name.value }}">
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <input class="btn btn-default pull-right" type="submit" value="Uprav"/>
+        </div>
+    </form>
+{% endblock settingMap %}

@@ -1,0 +1,26 @@
+﻿{% extends "settings_base.html" %}    
+{% block settingMap %}
+    <div class="row">
+    <div class="col-sm-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>nazev</th>
+                    <td colspan="2"><a class="btn btn-primary btn-block" href="{% url "maps:settingsLayerAdd" %}" role="button">pridat novou vrstvu</a></td>
+                </tr>
+            </thead>
+            <tbody>
+            {% for l in layers %}
+                <tr>
+                    <td>{{ l.idLayer }}</td>
+                    <td>{{ l.name }}</td>
+                    <td class="col-sm-4"><a class="btn btn-info btn-block" href="{% url "maps:settingsLayerEdit" id=l.id %}" role="button">Upravit</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock settingMap %}

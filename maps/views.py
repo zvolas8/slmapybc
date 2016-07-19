@@ -19,8 +19,8 @@ from lxml import etree
 
 # Create your views here.
 
-from .forms import ShapefileForm, SvgForm
-from .models import Shapefile, SvgFile
+from .forms import ShapefileForm, SvgForm, LayersForm
+from .models import Shapefile, SvgFile, Layers
 from django.conf import settings
 
 
@@ -28,16 +28,24 @@ from django.conf import settings
 
 def maps_create(request):
     form = ShapefileForm(request.POST or None, request.FILES or None)
+    print form.errors
+    print form.is_valid()
     if form.is_valid():
         file = form.save(commit=False)
         shpName = form.cleaned_data['name']
         layerName = form.cleaned_data['layerName']
+        #layerName2 = form.cleaned_data['layerName2']
+        #layersObject = get_object_or_404(Layers, id=layerName2.id)
+        #file.layerName2 = layersObject
+
+        tempConfig = request.POST['configArea'] 
         file.name = shpName
         for f in request.FILES.getlist('files'):
             if f.name[-3:] == "shp":
                 file.shapefileName = f.name
                 file.fileshp = f
                 tempfile = f  
+
         file.save()
 
         instance = form.save(commit=False);
@@ -48,29 +56,34 @@ def maps_create(request):
             if f.name[-3:] != "shp":
                 path = default_storage.save(os.path.join(settings.MEDIA_ROOT, str(instance.id), f.name), ContentFile(f.read()))
 
-        projectName = 'slepemapy'
-        resName = 'czwords'
+        #projectName = 'slepemapy'
+        #resName = 'czwords'
 
-        isFileExist = os.path.exists("translation/pofiles.po")
-        if(isFileExist == False):
-            createPOFile()
-            pr = transifexCreateNewProject(projectName)
-            print pr
-            re = transifexCreateNewResource(resName, projectName)
-            print re
+        #isFileExist = os.path.exists("translation/pofiles.po")
+        #if(isFileExist == False):
+        #    createPOFile()
+        #    pr = transifexCreateNewProject(projectName)
+        #    print pr
+        #    re = transifexCreateNewResource(resName, projectName)
+        #    print re
 
-        config = create_config(instance.id, tempfile.name, layerName)
-        pathPO = save_svg(config, shpName)
-        addWordToPOFile(pathPO)
-        transifexUpdateResource(resName, projectName)
+        #config = create_config(instance.id, tempfile.name, layerName)
+        config = addSrcToConfonfig(tempConfig, instance.id, tempfile.name)
+        svgId = save_svg(config, shpName)
+
+        #addWordToPOFile(pathPO) pathPO = potreba vztvorit z svgId
+        #transifexUpdateResource(resName, projectName)
 
         deleteFolder = os.path.join(settings.MEDIA_ROOT, "None")  # najit slozku automaticky TODO
         shutil.rmtree(deleteFolder)
 
         messages.success(request, "shapefile byl ulozen")
-        #return HttpResponseRedirect(instance.get_absolute_url())
 
+    ConfigForPost = json.dumps(config_for_post())
+    layers = Layers.objects.all()
     context = {
+        "layers": layers,
+        "config": ConfigForPost,
         "form": form
         }
     return render(request, "shapefile_form.html", context)
@@ -81,28 +94,48 @@ def save_svg(config, name):
     tConfig = create_config_format(config)
     svg.name = name
     svg.config = tConfig
+    svg.isOld = False
     svg.save()
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     path = os.path.join("img", str(svg.id), tName + ".svg")
     svg.pathToFileSvg = path
     svg.save()
     create_svg_file(config, name, svg.id)
-    return path
+    return svg.id
 
 def create_config_format(config):
     c = config['layers']
     return c
 
-def create_config(id, FILE_NAME, layerName):
+def addSrcToConfonfig(config, id, FILE_NAME):
+    config = dictFromString(config)
+    config['layers'][0]['src'] =  os.path.join(settings.MEDIA_ROOT, str(id), FILE_NAME)
+    return config
 
+#def create_config(id, FILE_NAME, layerName):
+
+#    config = {
+#            "layers": [{
+#                "id": str(layerName),
+#                "src": os.path.join(settings.MEDIA_ROOT, str(id), FILE_NAME),
+#                "attributes": {
+#                    "id": "iso_a2",
+#                    "code": "name",
+#                    "name": "name"
+#                }
+#            }]
+#        }
+#    return config
+
+def config_for_post():
     config = {
             "layers": [{
-                "id": str(layerName),
-                "src": os.path.join(settings.MEDIA_ROOT, str(id), FILE_NAME),
+                "id": "default",
+                "charset": "utf-8",
                 "attributes": {
-                    "id": "iso_a2",
-                    "code": "name",
-                    "name": "name"
+                    "id": "",
+                    "code": "",
+                    "name": ""
                 }
             }]
         }
@@ -134,7 +167,15 @@ def svg_list(request):
 
 def svg_detail(request, id=None):
     instance = get_object_or_404(SvgFile, id=id)
+    svgLayers = getLayersFroSvg(id)
+    tempLayers = Layers.objects.all()
+    print tempLayers
+    layers = []
+    for l in tempLayers:
+        if l.idLayer in svgLayers:
+            layers.append(l)
     context = {
+        "layers": layers,
         "instance": instance        
         }
     return render(request, "svg_detail.html", context)
@@ -177,9 +218,16 @@ def dictFromString(config):
 
 def delete_svg(request, id=None):
     instance = get_object_or_404(SvgFile, id=id)
+    finishSvg = instance.isOld
     instance.delete()
+
     messages.success(request, "smazano")
-    return redirect("maps:svglist")
+
+    if(finishSvg):
+        return redirect("maps:svglist")
+    else:
+        return redirect("maps:svgfinallist")
+    
 
 def update_svg(request, id=None):
     instance = get_object_or_404(SvgFile, id=id)
@@ -195,6 +243,21 @@ def update_svg(request, id=None):
         "form": form
         }
     return render(request, "svg_form.html", context)
+
+def getAllWordsForSvg(filePath):
+    words = []
+    with open(os.path.join("static", filePath), 'r') as infile:
+        svg = etree.parse( infile )
+    
+    SVG_NS = "{http://www.w3.org/2000/svg}"
+
+    for element in svg.iter(SVG_NS + 'path'):
+        word = element.get("data-name")
+        if(word is None):
+            continue
+        
+        words.append(word)
+    return words
 
 def addWordToPOFile(filePath):
     with open(os.path.join("static", filePath), 'r') as infile:
@@ -297,17 +360,151 @@ def transifexUpdateResource(resName, projectName):
     )
     return response.status_code
 
-
-def translation_word(reques, id=None):
+def translation_word(request, id=None):
     instance = get_object_or_404(SvgFile, id=id)
-    svg = etree.parse(open(os.path.join("static", "img", "38", "hory.svg"), 'r'))
+    filePath = instance.pathToFileSvg
+    words = getAllWordsForSvg(filePath)
+    context = {
+        "instance": instance, 
+        "words": words,
+        }
+    return render(request, "svg_words.html", context)
 
-    SVG_NS = "http://www.w3.org/2000/svg"
+def svg_final_list(request):
+    queryset = SvgFile.objects.all().filter(isOld=False)
+    context = {
+        "object_list": queryset,
+        }
+    return render(request, "svg_final_list.html", context)
 
-    for node in svg.findall('.//{%s}path' % SVG_NS):
-        print 'n=', node
-        for n in node.findall('.//{%s}data-name' % SVG_NS):
-            print n
+def add_layer(request, id=None):
+    form = ShapefileForm(request.POST or None, request.FILES or None)
+    if request.method == "POST": 
+        maps_create(request)
 
+        newLayerId = SvgFile.objects.latest('id').id
+
+        idList = []
+        idList.append(newLayerId)
+        idList.append(id)
+
+        config = generate_config(idList)
+
+        name = getNameForSvg(id)
+        save_svg(config, name)
+        
+        setIsOldOnTrue(id)
+        setIsOldOnTrue(newLayerId)
+        
+         
+        return redirect("maps:svgfinallist")
+   
+    postConfig = json.dumps(config_for_post())
+    layers = Layers.objects.all()
+
+    context = {
+        "layers": layers,
+        "config": postConfig,
+        "form": form
+        }
+    return render(request, "shapefile_form.html", context)
+
+
+def delete_layer(request, id=None, layer=None):
+    config = removeLayerFromConfig(getConfigAsDictById(id), layer)
+    name = getNameForSvg(id)
+
+    save_svg(config,name)
+    setIsOldOnTrue(id)
+    return redirect("maps:svgfinallist")
+
+def removeLayerFromConfig(config, layer):
+    resultConfig = {
+            "layers": []
+        }
+    i = 0
+    for l in config:
+        if config[i]["id"] != layer:
+            #del config[i]
+            resultConfig['layers'].append(l)
+            
+        i+=1
+    return resultConfig
+
+def getLayersFroSvg(id):
+    layers = []
     
+    tempConfig = get_object_or_404(SvgFile, id=id).config
+    config = dictFromString(tempConfig);
+    for l in config:
+        layers.append( l['id'])
+
+    return layers
+
+def remove_layer_list(request, id=None):
+    layers = getLayersFroSvg(id)
+    context = {
+        "id": id,
+        "layers": layers,
+        }
+    return render(request, "removeLayer.html", context)
+
+def getConfigAsDictById(id):
+    tempConfig = get_object_or_404(SvgFile, id=id).config
+    config = dictFromString(tempConfig);
+    return config
+
+def getNameForSvg(id):
+    return get_object_or_404(SvgFile, id=id).name
+
+def setIsOldOnTrue(id):
+    instance = get_object_or_404(SvgFile, id=id)
+    instance.isOld = True
+    instance.save()
+
+def svgToFinalSvg(request, id=None):
+    instance = get_object_or_404(SvgFile, id=id)
+    instance.isOld = False;
+    instance.save()
+    return redirect("maps:svgfinallist")
     
+def mapsSettings(request):
+    context = {
+        "id": id,
+        }
+    return render(request, "settings_base.html", context)
+    
+def SettingsLayer(request):
+    layers = Layers.objects.all()
+    context = {
+        "layers": layers,
+        }
+    return render(request, "settings_layer.html", context)
+
+def SettingsLayerEdit(request, id=None):
+    instance = get_object_or_404(Layers, id=id)
+    form = LayersForm(request.POST or None, instance = instance)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        #messages.success(request, "mapa se updatovala")
+        return redirect("maps:settingsLayer")
+    
+    context = {
+        "instance": instance,
+        "form": form
+        }
+    return render(request, "settings_layer_edit.html", context)
+
+def SettingsLayerAdd(request):
+    form = LayersForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        #messages.success(request, "mapa se updatovala")
+        return redirect("maps:settingsLayer")
+    
+    context = {
+        "form": form
+        }
+    return render(request, "settings_layer_add.html", context)

@@ -1,0 +1,39 @@
+﻿{% extends "base.html" %}   
+{% block content %}
+{% load static %}
+{% static "" as baseUrl %}
+        <div class="row">
+            {% for obj in object_list %}
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="margin-left-right-0">
+                        <div class="row my-text-center">
+                            <h3 class="svg-final-title">{{ obj.name }}</h3>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 svg-final-detail">
+                                <a class="btn btn-success btn-block" href="{{ obj.get_absolute_url }}" role="button">Detail</a>   
+                            </div>
+                            <div class="col-sm-6 svg-final-delete">
+                                    <a class="btn btn-danger btn-block" href="{{ obj.get_absolute_url }}delete" role="button">Smazat</a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <img src="{{ baseUrl }}{{ obj.pathToFileSvg }}" alt="{{ obj.name }}" class="thumbnail svg-final-image"/>
+                    <div class="row">
+                        <div class="col-sm-6 svg-final-detail">
+                            <a class="btn btn-primary btn-block" href="{{ obj.get_absolute_url }}addLayer" role="button">pridat vrstvu</a>   
+                        </div>
+                        <div class="col-sm-6 svg-final-delete">
+                            <a class="btn btn-primary btn-block" href="{{ obj.get_absolute_url }}removeLayer" role="button">odebrat vrstvu</a> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>    
+
+
+        
+{% endblock content %}
