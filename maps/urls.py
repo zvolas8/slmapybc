@@ -39,4 +39,5 @@ urlpatterns = [
     url(r'^mapssettings/layer$', SettingsLayer, name='settingsLayer'),
     url(r'^mapssettings/layer/add$', SettingsLayerAdd, name='settingsLayerAdd'),
     url(r'^mapssettings/layer/(?P<id>\d+)/edit/$', SettingsLayerEdit, name='settingsLayerEdit'),
+
 ]
