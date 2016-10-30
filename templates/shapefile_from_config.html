@@ -1,0 +1,45 @@
+﻿{% extends "base.html" %}    
+{% block content %}
+
+
+<form id="createSvgForm" method="post" action=""  enctype="multipart/form-data">{% csrf_token %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="shpName">Nazev shapefilu</label>
+                <input type="text" class="form-control" name="shpName" id="shpName" placeholder="">
+            </div>
+            <div class="form-group">
+                <label for="files">vloz vsechny potrebne soubory</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <span class="btn btn-primary btn-file">
+                            Nacti... 
+                            <input type="file" class="form-control" multiple="" id="files" name="files"/>
+                        </span>
+                    </span>
+                    <input class="form-control" type="text" readonly=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="shpConfig">Vyber konfiguaracni soubor</label>
+                <select class="form-control" name="shpConfig" id="shpConfig">
+                    <option selected="selected">--- Vyber konfiguaracni soubor ---</option>  
+                    {% for c in configs %}
+                        <option name="{{ c.name }}" value="{{ c.id }}" data-config="{{c.config}}">{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="btn btn-default" type="submit" value="uloz shapefile"/>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div id="jsonviewer" style="height: 320px; margin-bottom:10px; "></div>
+        </div>
+    </div>
+</form>
+{% endblock content %}
+
+
+

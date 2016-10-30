@@ -1,26 +1,35 @@
 ﻿{% extends "detail_base.html" %}
 {% block detail %}
+{% load my_tags %}
+
+
+
 
 <div class="row">
     <div class="col-sm-12">
+        {% if words|length == 0 %}
+        <p>zadne preklady nejsou k dispozici</p>
+        {% else %}
         <table class="table">
-    <thead>
-      <tr>
-        <th>CS</th>
-        <th>EN</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for word in words %}
-      <tr>
-        <td>{{ word }}</td>
-        <td>-</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+            <thead>
+                <tr>
+                    {% for title in wordsTitle %}
+                    <td><b>{{ title }}</b></td>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in words.0|length|range %}
+                <tr>
+                    {% for word in words %}
+                        <td>{{ word|index:i }}</td>
+                    {% endfor %}
+                </tr>
+               {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
     </div>
 </div>
-
 
 {% endblock detail %}

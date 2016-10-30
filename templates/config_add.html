@@ -1,0 +1,17 @@
+﻿{% extends "settings_base.html" %}    
+{% block settingMap %}
+<div class="row">
+    <div class="col-sm-12">
+        
+        <form id="configForm" method="post" action=""  enctype="multipart/form-data">{% csrf_token %}
+            <label for="configName">Název</label>
+            <input type="text" name="configName" id="configName" class="form-control"/>
+            <label style="margin-top:10px;">Konfigurační soubor</label>
+            <div id="jsoneditor" style="height: 320px; margin-bottom:10px; "></div>
+            <textarea class="hidden" name="myConfig" id="myConfig"></textarea>
+            <input type="submit" id="getJSON" class="pull-right btn btn-success" value="Uloz" >
+        </form>
+    </div>
+</div>
+
+{% endblock settingMap %}

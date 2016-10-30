@@ -1,0 +1,26 @@
+﻿
+{% extends "settings_base.html" %}    
+{% block settingMap %}
+{% load my_tags %}
+    <div class="row">
+        <div class="col-sm-12">
+            {% for l in language %}
+            <div class="row languageRow">
+                <div class="col-sm-2 title">
+                   {{ l.language }}
+                </div>
+                <div class="col-sm-4 stats">
+                    prelozeno: {{l.completed}}
+                </div>
+                <div class="col-sm-2 buttonBlock">
+                    <a href="{% url "maps:showcsv" name=l.language %}" class="btn btn-default btn-block">zobraz</a>
+                </div>
+                <div class="col-sm-2 buttonBlock">
+                    <a href="#" class="btn btn-default btn-block">+ěščřžýáí</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock settingMap %}

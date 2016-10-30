@@ -6,6 +6,9 @@
 <div class="row">
     <div class="col-sm-2">
         <a class="btn btn-success btn-block" href="{% url "maps:settingsLayer" %}" role="button">Vrstvy</a>
+        <a class="btn btn-success btn-block" href="{% url "maps:language" %}" role="button">Jazyky</a>
+        <a class="btn btn-success btn-block" href="{% url "maps:configlist" %}" role="button">Sprava konfigu</a>
+        <a class="btn btn-success btn-block" href="{% url "maps:configlist" %}" role="button">Kontakt</a>
     </div>
     <div class="col-sm-10">
         {% block settingMap %}{% endblock settingMap %}

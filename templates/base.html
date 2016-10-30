@@ -5,13 +5,15 @@
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>{% block head_title %}slepeMapy{% endblock head_title %}</title>
 
     <link rel="stylesheet" href="{% static "css/bootstrap.css" %}" />
     <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}" />
     <link rel="stylesheet" href="{% static "css/base.css" %}" />
-
+    <link rel="stylesheet" href="{% static "css/jsoneditor.css" %}" />
+    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}"/>
+ 
     <style>
     {% block style %}{% endblock style %}
     </style>
@@ -21,37 +23,49 @@
     <div class="container">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
-              <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Slepe mapy
-                </a>
-              </div>
-              <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                  <li class="{% active request "createshp" %}">
-                    <a href="{% url "maps:createshp" %}">Pridej nový shapefile</a>
-                  </li> 
-                  <li class="{% active request "createsvg" %}">
-                    <a href="{% url "maps:createsvg" %}">Vytvor svg</a>
-                 </li>
-                  <li class="{% active request "svglist" %}">
-                    <a href="{% url "maps:svglist" %}">Prehled svg</a>
-                  </li>
-                  <li class="{% active request "svgfinallist" %}">
-                    <a href="{% url "maps:svgfinallist" %}">Konecne svg</a>
-                  </li>
-                  <li class="{% active request "mapssettings" %}">
-                    <a href="{% url "maps:mapssettings" %}">Nastaveni</a>
-                  </li>
-                </ul>
-              </div>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url "maps:mainpage" %}">Slepe mapy</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="{% active request "createshp" %}">
+                            <a href="{% url "maps:createshp" %}">Pridej nový shapefile</a>
+                        </li> 
+                        <li class="{% active request "configshpcreate" %}">
+                            <a href="{% url "maps:createshpfromconfig" %}">nový shapefile z konfigu</a>
+                        </li>
+                        <li class="{% active request "createsvg" %}">
+                            <a href="{% url "maps:createsvg" %}">Vytvor svg</a>
+                        </li>
+                        <li class="{% active request "svglist" %}">
+                            <a href="{% url "maps:svglist" %}">Prehled svg</a>
+                        </li>
+                        <li class="{% active request "svgfinallist" %}">
+                            <a href="{% url "maps:svgfinallist" %}">Konecne svg</a>
+                        </li>
+                        <li class="{% active request "mapssettings" %}">
+                            <a href="{% url "maps:mapssettings" %}">Nastaveni</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle fast-settings-outer" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-cog fast-settings" aria-hidden="true"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">aktualizovat preklady</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
-    </nav>
+        </nav>
 
     {% block content %}{% endblock content %}
     </div>
@@ -64,5 +78,7 @@
     <script type="text/javascript" src="{% static "js/collapsePanel.js" %}"></script>
     <script type="text/javascript" src="{% static "js/configPrint.js" %}"></script>
     <script type="text/javascript" src="{% static "js/mapPrint.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jsoneditor.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/createConfig.js" %}"></script>
 </body>
 </html>

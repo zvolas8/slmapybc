@@ -1,0 +1,16 @@
+﻿{% extends "settings_base.html" %}    
+{% block settingMap %}
+<div class="row">
+    <div class="col-sm-12">
+        <form id="configFormEdit" method="post" action=""  enctype="multipart/form-data">{% csrf_token %}
+            <label for="configName">Název</label>
+            <input type="text" name="configName" id="configName" class="form-control" value="{{instance.name}}"/>
+            <label style="margin-top:10px;">Konfigurační soubor</label>
+            <div id="jsonedit" style="height: 320px; margin-bottom:10px; "></div>
+            <input type="hidden" name="myConfig" id="myConfig" value="{{instance.config}}">
+            <input type="submit" id="getJSON" class="pull-right btn btn-success" value="Uloz" >
+        </form>
+    </div>
+</div>
+
+{% endblock settingMap %}

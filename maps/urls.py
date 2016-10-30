@@ -2,6 +2,7 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from .views import (
+    main_page,
     shapefile_list,
     maps_create,
     maps_createsvg,
@@ -19,9 +20,17 @@ from .views import (
     SettingsLayer,
     SettingsLayerEdit,
     SettingsLayerAdd,
+    Language,
+    showCsv,
+    configList,
+    configAdd,
+    configEdit,
+    createShapefileFromConfig,
+    addLayerFromConfig,
     )
 
 urlpatterns = [
+    url(r'^$', main_page, name='mainpage'),
     url(r'^shplist/$', shapefile_list, name='shplist'),
     url(r'^svglist/$', svg_list, name='svglist'),
     url(r'^svgfinallist/$', svg_final_list, name='svgfinallist'),
@@ -36,8 +45,14 @@ urlpatterns = [
     url(r'^(?P<id>\d+)/translate/$', translation_word, name='svgtranslate'),
     url(r'^(?P<id>\d+)/toFinal/$', svgToFinalSvg),
     url(r'^mapssettings/$', mapsSettings, name='mapssettings'),
-    url(r'^mapssettings/layer$', SettingsLayer, name='settingsLayer'),
+    url(r'^mapssettings/layer/$', SettingsLayer, name='settingsLayer'),
     url(r'^mapssettings/layer/add$', SettingsLayerAdd, name='settingsLayerAdd'),
     url(r'^mapssettings/layer/(?P<id>\d+)/edit/$', SettingsLayerEdit, name='settingsLayerEdit'),
-
+    url(r'^mapssettings/language/$', Language, name='language'),
+    url(r'^mapssettings/language/(?P<name>\w+)$', showCsv, name='showcsv'),
+    url(r'^mapssettings/config/$', configList, name='configlist'),
+    url(r'^mapssettings/config/add$', configAdd, name='configadd'),
+    url(r'^mapssettings/config/(?P<id>\d+)/edit$', configEdit, name='configedit'),
+    url(r'^configshpcreate/$', createShapefileFromConfig, name='createshpfromconfig'),
+    url(r'^(?P<id>\d+)/addLayer/config$', addLayerFromConfig, name='addlayerfromconfig'),
 ]

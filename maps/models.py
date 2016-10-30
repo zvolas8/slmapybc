@@ -72,3 +72,14 @@ class SvgFile(models.Model):
 
     def get_absolute_url(self):
         return reverse("maps:svgdetail", kwargs={"id": self.id})
+
+class Config(models.Model):
+    name = models.CharField(max_length=120, blank=True, null=True)
+    config = models.TextField()
+    valid = models.BooleanField(default=True);
+
+    def __unicode__(self):
+        return self.name
+
+    def __str__(self):
+        return self.name

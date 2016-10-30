@@ -1,0 +1,27 @@
+﻿{% extends "settings_base.html" %}    
+{% block settingMap %}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="row">
+            <a href="{% url "maps:configadd" %}" class="btn btn-default configAdd">vytvorit novy konfiguracni soubor</a>
+        </div>
+        {% for config in configs %}
+        <div>
+            <span class="isItValidPanel {% if config.valid %} validPanel {% else %} invalidPanel {% endif %}"></span>
+            <span class="configRow" data-id="{{config.id}}">
+                  <span class="configTitle">
+                      {{config.name}}
+                  </span>
+                  <input name="{{config.id}}" id="{{config.id}}" type="hidden" value="{{config.config}}"/>
+            </span>
+            <a href="{% url "maps:configedit" id=config.id %}" class="configButton">uprav</a>
+        </div>
+        
+        {% endfor %}
+    </div>
+    <div class="col-sm-6">
+        <div id="jsonviewer" style="height: 320px; margin-bottom:10px; "></div>
+    </div>
+</div>
+
+{% endblock settingMap %}

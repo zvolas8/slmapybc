@@ -1,0 +1,26 @@
+﻿
+{% extends "settings_base.html" %}    
+{% block settingMap %}
+{% load my_tags %}
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Zdrojove slovo</th>
+                        <th>Preklad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for w in words %}
+                        <tr>
+                            <td>{{w.0}}</td>
+                            <td>{{w.1}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock settingMap %}
