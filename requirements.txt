@@ -2,7 +2,7 @@ Babel==2.3.4
 Django==1.9.4
 GDAL==1.11.4
 kartograph.py==0.6.8
-lxml==3.6.0
+lxml==4.6.3
 numpy==1.10.4
 polib==1.0.7
 pyproj==1.9.5
