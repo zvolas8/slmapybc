@@ -3,7 +3,7 @@ Django==1.9.4
 GDAL==1.11.4
 kartograph.py==0.6.8
 lxml==3.6.0
-numpy==1.10.4
+numpy==1.21.0
 polib==1.0.7
 pyproj==1.9.5
 pyshp==1.2.3
